@@ -1,0 +1,321 @@
+---
+version: 9d038768c04b4e698acc0a49766792d3945ccfa2
+paas/system:
+  cba-ocpu-aws:
+    violationCount: 6
+    entityType: "paas/system"
+    schemaVersion: "1.0"
+    id: cba-ocpu-aws
+    labels:
+      company: cba
+      system: cba-ocpu
+    name: One Cloud Public AWS
+    description: The consumable services running on AWS.
+
+  cba-ocpu:
+    entityType: "paas/system"
+    schemaVersion: "1.0"
+    id: cba-ocpu
+    labels:
+      company: cba
+    name: One Cloud Public
+    description: One Cloud Public covers all use of public cloud in CBA.
+
+  cba-ecp-aws:
+    entityType: "paas/system"
+    schemaVersion: "1.0"
+    id: cba-ecp-aws
+    labels:
+      company: cba
+      system: cba-ecp
+    name: ECP AWS
+    description: ECP-AWS is the Enterprise Control Plane implementation in AWS.
+
+  cba-ecp-azure:
+    entityType: "paas/system"
+    schemaVersion: "1.0"
+    id: cba-ecp-azure
+    labels:
+      company: cba
+      system: cba-ecp
+    name: ECP Azure
+    description: ECP-AWS is the Enterprise Control Plane implementation in Azure.
+
+  cba-ecp:
+    entityType: "paas/system"
+    schemaVersion: "1.0"
+    id: cba-ecp
+    labels:
+      company: cba
+    name: ECP
+    description: ECP is the Enterprise Control Plane.
+
+paas/team:
+  cba-ecp-aws-pipeline-squad:
+    entityType: paas/team
+    schemaVersion: "1.0"
+    id: cba-ecp-aws-pipeline-squad
+    name: Pipeline Squad
+    description: Responsible for the pipeline builder, cba-cdk
+    labels:
+      company: cba
+      system: cba-ecp-aws
+    emailDL: CIO4TechPublicCloudECP@cba.com.au
+
+  cba-ecp-aws-policy-squad:
+    entityType: paas/team
+    schemaVersion: "1.0"
+    id: cba-ecp-aws-policy-squad
+    name: Policy Squad
+    description: Responsible for the Compliance Engine, including Policy API
+    labels:
+      company: cba
+      system: cba-ecp-aws
+    emailDL: CIO4TechPublicCloudECP@cba.com.au
+
+  cba-ecp-aws-attestation-squad:
+    entityType: paas/team
+    schemaVersion: "1.0"
+    id: cba-ecp-aws-attestation-squad
+    name: Attestation Squad
+    description: Responsible for the Attestation Service, including Attestation Store and API
+    labels:
+      company: cba
+      system: cba-ecp-aws
+    emailDL: CIO4TechPublicCloudECP@cba.com.au
+
+paas/company:
+  cba:
+    entityType: paas/company
+    schemaVersion: "1.0"
+    id: cba
+    name: Commonwealth Bank of Australia
+    abbreviation: CBA 
+    country: Australia
+    url: https://www.commbank.com.au
+
+paas/appspace:
+  cba-ecp-aws-att-svc-dev:
+    entityType: paas/appspace
+    schemaVersion: "1.0"
+    id: cba-ecp-aws-att-svc-dev
+    name: ECP Attestation Service Development
+    
+    labels:
+      company: cba
+      system: cba-ecp-aws
+      app: cba-ecp-aws-att-svc
+    
+    clusterGroupId: ecp-aws-dev
+    
+    ownerEmail: "CIO4TechPublicCloudECP@cba.com.au"
+    
+    security:
+      kubernetes:
+        deployers:
+          - au\acoe_ecp_dev_deployer
+        isolationLevel: shared
+        roleBindings:
+          - roleName: ecp-system:engineer-dev
+            users:
+              - cba#kalraaas
+            groups:
+              - ecp-dev
+          - roleName: ecp-system:deployer
+            users:
+              - deployment#all
+    
+    apps:
+      - appId: cba-ecp-att-svc
+        configKey: prod
+      - appId: cba-ecp-policy-api
+        configKey: prod
+    
+    quotas:
+      kubernetes:
+        cpuAndMemory:
+          - name: "basic"
+            requests:
+              cpu: "16"
+              memory: "32Gi"
+            limits:
+              cpu: "32"
+              memory: "64Gi"
+
+  cba-ecp-aws-policy-api-dev:
+    entityType: paas/appspace
+    schemaVersion: "1.0"
+    id: cba-ecp-aws-policy-api-dev
+    name: ECP Policy API Development
+    
+    labels:
+      company: cba
+      system: cba-ecp-aws
+      app: cba-ecp-aws-policy-api
+    
+    clusterGroupId: ecp-aws-dev
+    
+    ownerEmail: "CIO4TechPublicCloudECP@cba.com.au"
+    
+    security:
+      kubernetes:
+        deployers:
+          - au\acoe_ecp_dev_deployer
+        isolationLevel: shared
+        roleBindings:
+          - roleName: ecp-system:engineer-dev
+            users:
+              - cba#dimechad
+            groups:
+              - ecp-dev
+          - roleName: ecp-system:deployer
+            users:
+              - deployment#all
+    
+    apps:
+      - appId: cba-ecp-att-svc
+        configKey: prod
+      - appId: cba-ecp-policy-api
+        configKey: prod
+    
+    quotas:
+      kubernetes:
+        cpuAndMemory:
+          - name: "basic"
+            requests:
+              cpu: "16"
+              memory: "32Gi"
+            limits:
+              cpu: "32"
+              memory: "64Gi"
+
+  cba-ecp-preprod:
+    entityType: paas/appspace
+    schemaVersion: "1.0"
+    id: cba-ecp-preprod
+    name: ECP Pre-Production
+    
+    labels:
+      company: cba
+      system: cba-ecp-aws
+    
+    clusterGroupId: ecp-aws-preprod
+    
+    ownerEmail: "CIO4TechPublicCloudECP@cba.com.au"
+    
+    security:
+      kubernetes:
+        deployers:
+          - au\acoe_ecp_prod_deployer
+        isolationLevel: shared
+        roleBindings:
+          # Team Ops L2
+          - roleName: ecp-system:support-operator
+            users:
+              - cba#dimechad
+            groups:
+              - ecp-prod
+          - roleName: ecp-system:deployer
+            users:
+              - deployment#all
+    
+    apps:
+      - appId: cba-ecp-att-svc
+        configKey: prod
+      - appId: cba-ecp-policy-api
+        configKey: prod
+    
+    quotas:
+      kubernetes:
+        cpuAndMemory:
+          - name: "basic"
+            requests:
+              cpu: "16"
+              memory: "32Gi"
+            limits:
+              cpu: "32"
+              memory: "64Gi"
+
+  cba-ecp-prod:
+    entityType: paas/appspace
+    schemaVersion: "1.0"
+    id: cba-ecp-prod
+    name: ECP Production
+    
+    labels:
+      company: cba
+      system: cba-ecp-aws
+    
+    clusterGroupId: ecp-aws-prod
+    
+    ownerEmail: "CIO4TechPublicCloudECP@cba.com.au"
+    
+    security:
+      kubernetes:
+        deployers:
+          - au\acoe_ecp_prod_deployer
+        isolationLevel: shared
+        roleBindings:
+          # Team Ops L2
+          - roleName: ecp-system:support-operator
+            users:
+              - cba#dimechad
+            groups:
+              - ecp-prod
+          - roleName: ecp-system:deployer
+            users:
+              - deployment#all
+    
+    apps:
+      - appId: cba-ecp-att-svc
+        configKey: prod
+      - appId: cba-ecp-policy-api
+        configKey: prod
+    
+    quotas:
+      kubernetes:
+        cpuAndMemory:
+          - name: "basic"
+            requests:
+              cpu: "16"
+              memory: "32Gi"
+            limits:
+              cpu: "32"
+              memory: "64Gi"
+
+paas/app:
+  cba-ecp-aws-att-svc:
+    entityType: "paas/app"
+    schemaVersion: "1.0"
+    id: cba-ecp-aws-att-svc
+    labels:
+      company: cba
+      system: cba-ecp-aws
+    
+    name: Attestation Service
+    
+    deployment:
+      deploymentTarget: Lambda
+    
+    appspaceConfigurations:
+      dev:
+      nonprod:
+      prod:
+
+  cba-ecp-aws-policy-api:
+    entityType: "paas/app"
+    schemaVersion: "1.0"
+    id: cba-ecp-aws-policy-api
+    labels:
+      company: cba
+      system: cba-ecp-aws
+    
+    name: Policy API
+    
+    deployment:
+      deploymentTarget: ECS
+    
+    appspaceConfigurations:
+      dev:
+      nonprod:
+      prod:

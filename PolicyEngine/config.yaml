@@ -1,0 +1,15 @@
+services:
+  - name: policy_engine_control_plane
+    url: https://s3-ap-southeast-2.amazonaws.com/${BUNDLE_BUCKET}/${BUNDLE_RESOURCE_PREFIX}
+    credentials:
+      s3_signing:
+        metadata_credentials:
+          aws_region: ${AWS_REGION}
+
+bundles:
+  policy_engine_control_plane:
+    service: policy_engine_control_plane
+    resource: bundle.tar.gz
+    polling:
+      min_delay_seconds: 10
+      max_delay_seconds: 20

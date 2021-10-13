@@ -1,0 +1,7 @@
+FROM openpolicyagent/opa:0.17.2
+
+ADD ./build/bundle.tar.gz bundle.tar.gz
+
+EXPOSE 8181
+
+CMD ["run", "bundle.tar.gz", "-s"]
